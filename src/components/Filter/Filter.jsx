@@ -18,6 +18,8 @@ const Filter = () => {
       type="text"
       name="filter"
       value={filter}
+      label="Contact Search"
+      variant="outlined"
       onChange={changeFilter}
       fullWidth
       InputProps={{

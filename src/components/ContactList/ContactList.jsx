@@ -10,10 +10,13 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
 import { styled } from '@mui/material/styles';
 
-const ContactList = () => {
+const ContactList = props => {
   const visibleContacts = useSelector(selectVisibleContacts);
+
+  // const { setContactId, setOpenPopup } = props;
 
   const dispatch = useDispatch();
 
@@ -26,6 +29,12 @@ const ContactList = () => {
     event.target.disabled = true;
     event.target.innerText = 'Deleting...';
   };
+
+  // const handleEditContact = contactId => {
+  //   setContactId(contactId);
+
+  //   setOpenPopup(true);
+  // };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -56,13 +65,19 @@ const ContactList = () => {
               <TableCell align="left">{name}</TableCell>
               <TableCell align="center">{number}</TableCell>
               <TableCell align="right">
+                {/* <Button
+                  variant="outlined"
+                  onClick={() => handleEditContact(id)}
+                  sx={{ mr: 1 }}
+                >
+                  <EditIcon />
+                </Button> */}
                 <Button
                   variant="outlined"
                   onClick={event => buttonHandleDeleteContact(event, id)}
-                  endIcon={<DeleteIcon />}
                   color="error"
                 >
-                  Delete
+                  <DeleteIcon />
                 </Button>
               </TableCell>
             </TableRow>

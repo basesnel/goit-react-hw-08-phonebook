@@ -6,12 +6,13 @@ import ReactInputMask from 'react-input-mask';
 import useLocalStorage from '../../hooks/useLocalStorage';
 
 import { useSelector, useDispatch } from 'react-redux';
+// import { useEffect } from 'react';
 import { selectContacts } from '../../redux/contacts/selectors';
 import { addContact } from '../../redux/contacts/operations';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import SendIcon from '@mui/icons-material/Send';
 import { Form, Field } from 'formik';
 
 const scheme = yup.object().shape({
@@ -25,9 +26,27 @@ const scheme = yup.object().shape({
     ),
 });
 
-export function ContactEditor() {
+export function ContactEditor(props) {
+  const { setOpenPopup } = props;
+
+  const contacts = useSelector(selectContacts);
+
+  // const searchedIndex = contacts.findIndex(contact => contact.id === contactId);
+  // console.log(contacts[searchedIndex]);
+
+  // const contact = contacts[searchedIndex];
+  // const ctName = contact.name;
+  // const ctNumber = contact.number;
+
   const [name, setName] = useLocalStorage('name', '');
   const [number, setNumber] = useLocalStorage('number', '');
+
+  // useEffect(() => {
+  //   if (contactId) {
+  //     setName(ctName);
+  //     setNumber(ctNumber);
+  //   }
+  // }, [contactId, ctName, ctNumber, setName, setNumber]);
 
   const state = { name, number };
 
@@ -51,37 +70,35 @@ export function ContactEditor() {
     }
   };
 
-  const contacts = useSelector(selectContacts);
+  // const contacts = useSelector(selectContacts);
 
   const dispatch = useDispatch();
 
   const formSubmitHandler = data => {
     const { name, number } = data;
 
-    // const contact = {
-    //   id: nanoid(),
-    //   name,
-    //   phone,
-    // };
-
     const contact = {
       name,
       number,
     };
 
+    // if (contactId) {
+    //   console.log(contact);
+    //   dispatch(updateContact(contactId, contact));
+    // } else {
     const contactName = contact.name.toLowerCase();
     if (contacts.find(contact => contact.name.toLowerCase() === contactName)) {
       alert(`${contact.name} is already in contacts.`);
       return;
     }
-
     dispatch(addContact(contact));
+    // }
   };
 
   const handleSubmit = event => {
-    console.log('submit contact');
     formSubmitHandler(state);
     reset();
+    setOpenPopup(false);
   };
 
   const reset = () => {
@@ -99,7 +116,7 @@ export function ContactEditor() {
     >
       {({ errors, isValid, touched, dirty }) => (
         <Form>
-          <Stack direction="row" spacing={1} useFlexGap>
+          <Stack spacing={1} sx={{ p: 2 }} useFlexGap>
             <Field
               type="text"
               name="name"
@@ -141,17 +158,16 @@ export function ContactEditor() {
             <Button
               variant="contained"
               type="submit"
-              endIcon={<PersonAddAlt1Icon />}
+              endIcon={<SendIcon />}
               size="large"
+              fullWidth
               style={{
-                maxWidth: '190px',
                 maxHeight: '56px',
-                minWidth: '190px',
                 minHeight: '56px',
               }}
               disabled={!isValid || dirty}
             >
-              Add contact
+              Send Contact
             </Button>
           </Stack>
         </Form>
